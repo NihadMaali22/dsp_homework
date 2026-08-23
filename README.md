@@ -27,6 +27,16 @@ Imports functions from `part1.py` and implements:
 
 ---
 
+## 📦 Installation
+
+Install required dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
 ## 🚀 How to Run
 
 ### 🌐 1. Interactive Web UI Studio (Recommended)
