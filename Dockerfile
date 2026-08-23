@@ -14,7 +14,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy project source files
 COPY . .
 
-ENV PORT=5000
-EXPOSE 5000
+# Support Railway port binding (including 3003, 5000, 8080, 80)
+ENV PORT=3003
+EXPOSE 3003 5000 8080 80
 
-CMD ["sh", "-c", "gunicorn app:app --bind 0.0.0.0:${PORT:-5000} --workers 2 --timeout 120"]
+CMD gunicorn app:app --bind 0.0.0.0:${PORT:-3003} --workers 2 --timeout 120
