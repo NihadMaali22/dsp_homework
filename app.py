@@ -511,5 +511,5 @@ def api_get_presets():
 
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 3003))
+    port = int(os.environ.get("PORT", 8080))
     app.run(host="0.0.0.0", port=port, debug=False)
