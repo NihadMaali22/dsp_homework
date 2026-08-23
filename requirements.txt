@@ -1,10 +1,5 @@
 # Digital Signal Processing (DSP) Project Requirements
-
-# Core Numerical & Array Computing
 numpy>=1.24.0
-
-# Publication-Quality Plotting & Figure Generation
 matplotlib>=3.7.0
-
-# Interactive Web Studio & REST API Backend
 flask>=3.0.0
+gunicorn>=21.2.0
