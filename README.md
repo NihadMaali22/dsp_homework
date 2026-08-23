@@ -29,17 +29,31 @@ Imports functions from `part1.py` and implements:
 
 ## 🚀 How to Run
 
+### 🌐 1. Interactive Web UI Studio (Recommended)
+Launch the modern, responsive graphical web frontend with interactive plots, step-by-step convolution animations, KaTeX formulas, and audio sonification:
+
 ```bash
-# 1. Run Part I demonstration:
+./run_ui.sh
+# or:
+python3 gui.py
+```
+This starts the local web server and automatically opens **`http://127.0.0.1:5000`** in your browser.
+
+---
+
+### 💻 2. Command-Line & Demonstrations
+
+```bash
+# Run Part I demonstration figure:
 python3 part1.py
 
-# 2. Run Part II analysis demonstrations:
+# Run Part II demonstration figures (Section 4, Rect Pulses, Cosine MA):
 python3 part2.py
 
-# 3. Run interactive mode:
+# Run terminal CLI interactive mode:
 python3 part2.py --interactive
 
-# 4. Run automated unit test suite:
+# Run automated unit test suite:
 python3 test_dsp.py
 ```
 

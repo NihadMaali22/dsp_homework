@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DSP Interactive Studio | Discrete-Time Signals, Convolution & DTFT</title>
+  
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- KaTeX Math Engine & Auto-Render Extension -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+  <!-- Chart.js for Interactive Plotting -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Custom CSS (MindMarket Editorial Theme) -->
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+  <!-- TOP APP HEADER -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="logo-badge">
+        <i class="fa-solid fa-wave-square"></i>
+      </div>
+      <div>
+        <h1 class="app-title">DSP Interactive Studio</h1>
+        <p class="app-subtitle">Discrete-Time Signals, Linear Convolution & DTFT Analysis</p>
+      </div>
+    </div>
+    
+    <div class="header-center">
+      <div class="engine-badge">
+        <span class="pulse-dot"></span>
+        <span>Direct Summation Engine (Mathematical Definition)</span>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <button class="btn btn-secondary btn-sm" id="btnSoundTest" title="Audio Sonification Master">
+        <i class="fa-solid fa-volume-high"></i> Audio Ready
+      </button>
+      <button class="btn btn-icon" id="themeToggleBtn" title="Theme Info">
+        <i class="fa-solid fa-feather" id="themeIcon"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- NAVIGATION TABS -->
+  <nav class="nav-tabs">
+    <button class="tab-btn active" data-tab="tab-part1">
+      <i class="fa-solid fa-chart-simple"></i>
+      <span>Part I: Singularity Lab</span>
+    </button>
+    <button class="tab-btn" data-tab="tab-part2">
+      <i class="fa-solid fa-table-cells"></i>
+      <span>Part II: Convolution & DTFT Matrix</span>
+    </button>
+    <button class="tab-btn" data-tab="tab-animator">
+      <i class="fa-solid fa-circle-play"></i>
+      <span>Part III: Step-by-Step Animator</span>
+    </button>
+    <button class="tab-btn" data-tab="tab-custom">
+      <i class="fa-solid fa-flask-vial"></i>
+      <span>Custom Expressions</span>
+    </button>
+    <button class="tab-btn" data-tab="tab-presets">
+      <i class="fa-solid fa-book-bookmark"></i>
+      <span>Homework Presets & Theory</span>
+    </button>
+  </nav>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="main-container">
+
+    <!-- ================================================================= -->
+    <!-- TAB 1: PART I - SINGULARITY & ELEMENTARY SIGNALS LAB -->
+    <!-- ================================================================= -->
+    <section id="tab-part1" class="tab-content active">
+      <div class="grid-layout-two-col">
+        
+        <!-- Controls Column -->
+        <div class="card panel-controls">
+          <div class="card-header">
+            <div class="card-title">
+              <i class="fa-solid fa-sliders"></i> Signal Generator
+            </div>
+            <span class="badge badge-cyan" id="part1SigBadge">u[n]</span>
+          </div>
+
+          <!-- Signal Selector Grid -->
+          <div class="form-group">
+            <label class="form-label">Elementary Function Type:</label>
+            <div class="sig-type-selector">
+              <button class="sig-pill active" data-type="step">
+                <span class="pill-sym">u[n]</span>
+                <span class="pill-name">Unit Step</span>
+              </button>
+              <button class="sig-pill" data-type="impulse">
+                <span class="pill-sym">δ[n]</span>
+                <span class="pill-name">Unit Impulse</span>
+              </button>
+              <button class="sig-pill" data-type="rect">
+                <span class="pill-sym">rect_N</span>
+                <span class="pill-name">Rect Pulse</span>
+              </button>
+              <button class="sig-pill" data-type="sin">
+                <span class="pill-sym">sin</span>
+                <span class="pill-name">Sinusoid</span>
+              </button>
+              <button class="sig-pill" data-type="cos">
+                <span class="pill-sym">cos</span>
+                <span class="pill-name">Cosinusoid</span>
+              </button>
+              <button class="sig-pill" data-type="sgn">
+                <span class="pill-sym">sgn</span>
+                <span class="pill-name">Signum</span>
+              </button>
+              <button class="sig-pill" data-type="ramp">
+                <span class="pill-sym">r[n]</span>
+                <span class="pill-name">Unit Ramp</span>
+              </button>
+              <button class="sig-pill" data-type="exponential">
+                <span class="pill-sym">aⁿ</span>
+                <span class="pill-name">Exp Decay</span>
+              </button>
+              <button class="sig-pill" data-type="gaussian">
+                <span class="pill-sym">exp(-n²)</span>
+                <span class="pill-name">Gaussian</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Dynamic Parameters -->
+          <div class="params-box">
+            
+            <!-- Amplitude A -->
+            <div class="slider-row">
+              <div class="slider-header">
+                <label>Amplitude (A):</label>
+                <span class="val-display" id="p1_A_val">1.0</span>
+              </div>
+              <div class="slider-controls">
+                <input type="range" id="p1_A_range" min="-5" max="5" step="0.2" value="1.0">
+                <input type="number" id="p1_A_num" class="num-input" min="-20" max="20" step="0.1" value="1.0">
+              </div>
+            </div>
+
+            <!-- Time Shift n0 -->
+            <div class="slider-row">
+              <div class="slider-header">
+                <label>Time Shift (n₀):</label>
+                <span class="val-display" id="p1_n0_val">0</span>
+              </div>
+              <div class="slider-controls">
+                <input type="range" id="p1_n0_range" min="-15" max="15" step="1" value="0">
+                <input type="number" id="p1_n0_num" class="num-input" min="-30" max="30" step="1" value="0">
+              </div>
+            </div>
+
+            <!-- Pulse Width N -->
+            <div class="slider-row" id="row_p1_N">
+              <div class="slider-header">
+                <label>Pulse Width (N samples):</label>
+                <span class="val-display" id="p1_N_val">4</span>
+              </div>
+              <div class="slider-controls">
+                <input type="range" id="p1_N_range" min="1" max="20" step="1" value="4">
+                <input type="number" id="p1_N_num" class="num-input" min="1" max="50" step="1" value="4">
+              </div>
+            </div>
+
+            <!-- Frequency f0 -->
+            <div class="slider-row" id="row_p1_f0" style="display: none;">
+              <div class="slider-header">
+                <label>Digital Frequency (f₀ in cycles/sample):</label>
+                <span class="val-display" id="p1_f0_val">0.100</span>
+              </div>
+              <div class="slider-controls">
+                <input type="range" id="p1_f0_range" min="0.01" max="0.50" step="0.005" value="0.10">
+                <input type="number" id="p1_f0_num" class="num-input" min="0.001" max="0.500" step="0.005" value="0.10">
+              </div>
+            </div>
+
+            <!-- Phase phi -->
+            <div class="slider-row" id="row_p1_phi" style="display: none;">
+              <div class="slider-header">
+                <label>Phase (φ in radians):</label>
+                <span class="val-display" id="p1_phi_val">0.00 rad</span>
+              </div>
+              <div class="slider-controls">
+                <input type="range" id="p1_phi_range" min="-3.14" max="3.14" step="0.1" value="0.0">
+                <input type="number" id="p1_phi_num" class="num-input" min="-3.14" max="3.14" step="0.05" value="0.0">
+              </div>
+            </div>
+
+            <!-- Alpha -->
+            <div class="slider-row" id="row_p1_alpha" style="display: none;">
+              <div class="slider-header">
+                <label>Decay Base (α):</label>
+                <span class="val-display" id="p1_alpha_val">0.80</span>
+              </div>
+              <div class="slider-controls">
+                <input type="range" id="p1_alpha_range" min="0.1" max="0.95" step="0.05" value="0.80">
+                <input type="number" id="p1_alpha_num" class="num-input" min="0.01" max="1.5" step="0.05" value="0.80">
+              </div>
+            </div>
+
+            <!-- Sigma -->
+            <div class="slider-row" id="row_p1_sigma" style="display: none;">
+              <div class="slider-header">
+                <label>Gaussian Spread (σ):</label>
+                <span class="val-display" id="p1_sigma_val">3.0</span>
+              </div>
+              <div class="slider-controls">
+                <input type="range" id="p1_sigma_range" min="0.5" max="10.0" step="0.5" value="3.0">
+                <input type="number" id="p1_sigma_num" class="num-input" min="0.5" max="20.0" step="0.5" value="3.0">
+              </div>
+            </div>
+
+            <!-- Time Domain Range -->
+            <div class="slider-row">
+              <div class="slider-header">
+                <label>Time Axis Range [n_min, n_max]:</label>
+                <span class="val-display" id="p1_range_val">[-20, 20]</span>
+              </div>
+              <div class="range-dual-inputs">
+                <span>From n =</span>
+                <input type="number" id="p1_nmin" class="num-input" value="-20" min="-50" max="0">
+                <span>to n =</span>
+                <input type="number" id="p1_nmax" class="num-input" value="20" min="1" max="50">
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Formula & Audio Card -->
+          <div class="formula-box">
+            <div class="formula-label">Mathematical Signal Model:</div>
+            <div class="katex-container" id="p1_katex_formula">x[n] = u[n]</div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="btn-group">
+            <button class="btn btn-primary" id="btnPlayP1Audio">
+              <i class="fa-solid fa-play"></i> Listen to Signal (Sonification)
+            </button>
+            <button class="btn btn-outline" id="btnResetP1">
+              <i class="fa-solid fa-arrow-rotate-left"></i> Reset
+            </button>
+          </div>
+
+          <!-- Signal Stats Card -->
+          <div class="stats-card">
+            <div class="stats-title"><i class="fa-solid fa-chart-line"></i> Quantitative Signal Properties</div>
+            <div class="stats-grid">
+              <div class="stat-item">
+                <span class="stat-label">Total Energy (E_x):</span>
+                <span class="stat-val" id="p1_stat_energy">0.00</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Average Power (P_x):</span>
+                <span class="stat-val" id="p1_stat_power">0.00</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Peak Amplitude:</span>
+                <span class="stat-val" id="p1_stat_peak">0.00</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Mean (DC Level):</span>
+                <span class="stat-val" id="p1_stat_mean">0.00</span>
+              </div>
+              <div class="stat-item col-span-2">
+                <span class="stat-label">Active Support Interval:</span>
+                <span class="stat-val" id="p1_stat_support">[-20, 20]</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Plots Column -->
+        <div class="plots-column">
+          
+          <!-- Time Domain Stem Plot -->
+          <div class="card plot-card">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fa-solid fa-chart-column"></i> Discrete-Time Signal Stem Plot: x[n]
+              </div>
+              <div class="plot-options">
+                <label class="toggle-label">
+                  <input type="checkbox" id="p1_toggle_envelope">
+                  <span>Show Envelope</span>
+                </label>
+              </div>
+            </div>
+            <div class="canvas-wrapper">
+              <canvas id="p1TimeCanvas"></canvas>
+            </div>
+          </div>
+
+          <!-- Frequency Domain DTFT Plot -->
+          <div class="card plot-card">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fa-solid fa-wave-square"></i> Discrete-Time Fourier Transform: |X(f)|
+              </div>
+              <div class="plot-options">
+                <div class="tab-pills-sm">
+                  <button class="pill-sm active" id="p1_btn_mag">Magnitude |X(f)|</button>
+                  <button class="pill-sm" id="p1_btn_phase">Phase ∠X(f)</button>
+                  <button class="pill-sm" id="p1_btn_real_imag">Real / Imaginary</button>
+                </div>
+              </div>
+            </div>
+            <div class="canvas-wrapper">
+              <canvas id="p1FreqCanvas"></canvas>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- TAB 2: PART II - CONVOLUTION & DTFT STUDIO (3x2 MATRIX) -->
+    <!-- ================================================================= -->
+    <section id="tab-part2" class="tab-content">
+      
+      <!-- Presets Toolbar -->
+      <div class="card presets-bar">
+        <div class="presets-label">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> <strong>Homework & Application Presets:</strong>
+        </div>
+        <div class="preset-buttons">
+          <button class="preset-btn active" data-preset="sec4">
+            <span>Section 4:</span> 2 u[n - 2] * δ[n - 1]
+          </button>
+          <button class="preset-btn" data-preset="rect_pulses">
+            <span>Rect Pulses:</span> 3 rect₅[n - 2] * 2 rect₄[n + 1]
+          </button>
+          <button class="preset-btn" data-preset="cosine_ma">
+            <span>Cosine + 3-pt MA:</span> 2 cos(2π·0.1n) * ⅓ rect₃[n]
+          </button>
+          <button class="preset-btn" data-preset="delay_echo">
+            <span>Delay / Echo:</span> x[n] * (δ[n] + 0.6 δ[n - 4])
+          </button>
+          <button class="preset-btn" data-preset="differentiator">
+            <span>Differentiator:</span> u[n] * (δ[n] - δ[n - 1])
+          </button>
+        </div>
+      </div>
+
+      <!-- Verification Status Banner -->
+      <div class="verification-banner" id="p2_verif_banner">
+        <div class="verif-icon">
+          <i class="fa-solid fa-circle-check"></i>
+        </div>
+        <div class="verif-info">
+          <div class="verif-title">DTFT CONVOLUTION THEOREM VERIFICATION: <span class="status-pass">PASS (EXACT THEOREM MATCH)</span></div>
+          <div class="verif-details">
+            <span class="math-tex-inline">$$\mathcal{F}\{x[n] * h[n]\} = X(f) \cdot H(f)$$</span>
+            <span class="sep">•</span>
+            <span>Max Absolute Error: <strong id="p2_max_err">7.930e-14</strong></span>
+            <span class="sep">•</span>
+            <span>Mean Squared Error: <strong id="p2_mse_err">2.415e-28</strong></span>
+          </div>
+        </div>
+        <div class="verif-actions">
+          <button class="btn btn-sm btn-primary" id="btnExportMatplotlib">
+            <i class="fa-solid fa-camera"></i> Download Matplotlib PNG
+          </button>
+          <button class="btn btn-sm btn-outline" id="btnSendToAnimator">
+            <i class="fa-solid fa-film"></i> Animate Step-by-Step
+          </button>
+        </div>
+      </div>
+
+      <!-- Signals Configuration Accordion -->
+      <div class="signals-config-grid">
+        
+        <!-- Signal x[n] Box -->
+        <div class="card signal-box sig-box-x">
+          <div class="card-header">
+            <div class="card-title text-cyan">
+              <i class="fa-solid fa-arrow-right-to-bracket"></i> Input Signal: x[n]
+            </div>
+            <div class="sig-formula-mini" id="p2_x_latex">x[n] = 2u[n - 2]</div>
+          </div>
+          <div class="sig-controls-row">
+            <div class="form-item">
+              <label>Function Type:</label>
+              <select id="p2_x_type" class="select-input">
+                <option value="step" selected>Unit Step: u[n]</option>
+                <option value="impulse">Unit Impulse: δ[n]</option>
+                <option value="rect">Rectangular Pulse: rect_N</option>
+                <option value="cos">Cosinusoid: cos(2π·f₀·n)</option>
+                <option value="sin">Sinusoid: sin(2π·f₀·n)</option>
+                <option value="sgn">Signum: sgn[n]</option>
+                <option value="ramp">Unit Ramp: r[n]</option>
+                <option value="exponential">Exponential Decay: aⁿ</option>
+              </select>
+            </div>
+            <div class="form-item">
+              <label>Amplitude (A):</label>
+              <input type="number" id="p2_x_A" class="num-input-sm" value="2.0" step="0.5">
+            </div>
+            <div class="form-item">
+              <label>Time Shift (n₀):</label>
+              <input type="number" id="p2_x_n0" class="num-input-sm" value="2" step="1">
+            </div>
+            <div class="form-item" id="p2_x_N_container" style="display:none;">
+              <label>Width (N):</label>
+              <input type="number" id="p2_x_N" class="num-input-sm" value="4" min="1" max="20">
+            </div>
+            <div class="form-item" id="p2_x_f0_container" style="display:none;">
+              <label>Frequency (f₀):</label>
+              <input type="number" id="p2_x_f0" class="num-input-sm" value="0.1" step="0.02" min="0.01" max="0.5">
+            </div>
+          </div>
+        </div>
+
+        <!-- Signal h[n] Box -->
+        <div class="card signal-box sig-box-h">
+          <div class="card-header">
+            <div class="card-title text-amber">
+              <i class="fa-solid fa-sliders"></i> Impulse Response: h[n]
+            </div>
+            <div class="sig-formula-mini" id="p2_h_latex">h[n] = \delta[n - 1]</div>
+          </div>
+          <div class="sig-controls-row">
+            <div class="form-item">
+              <label>Function Type:</label>
+              <select id="p2_h_type" class="select-input">
+                <option value="impulse" selected>Unit Impulse: δ[n]</option>
+                <option value="step">Unit Step: u[n]</option>
+                <option value="rect">Rectangular Pulse: rect_N</option>
+                <option value="cos">Cosinusoid: cos(2π·f₀·n)</option>
+                <option value="sin">Sinusoid: sin(2π·f₀·n)</option>
+                <option value="sgn">Signum: sgn[n]</option>
+                <option value="ramp">Unit Ramp: r[n]</option>
+                <option value="exponential">Exponential Decay: aⁿ</option>
+              </select>
+            </div>
+            <div class="form-item">
+              <label>Amplitude (A):</label>
+              <input type="number" id="p2_h_A" class="num-input-sm" value="1.0" step="0.5">
+            </div>
+            <div class="form-item">
+              <label>Time Shift (n₀):</label>
+              <input type="number" id="p2_h_n0" class="num-input-sm" value="1" step="1">
+            </div>
+            <div class="form-item" id="p2_h_N_container" style="display:none;">
+              <label>Width (N):</label>
+              <input type="number" id="p2_h_N" class="num-input-sm" value="3" min="1" max="20">
+            </div>
+            <div class="form-item" id="p2_h_f0_container" style="display:none;">
+              <label>Frequency (f₀):</label>
+              <input type="number" id="p2_h_f0" class="num-input-sm" value="0.1" step="0.02" min="0.01" max="0.5">
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- THE 3x2 MATRIX OF SUBPLOTS -->
+      <div class="matrix-3x2-grid">
+        
+        <!-- Row 1: x[n] and |X(f)| -->
+        <div class="card matrix-card">
+          <div class="matrix-card-header">
+            <span class="badge-sub">1</span>
+            <span class="matrix-title">Subplot 1 — Time Domain: Input Signal x[n]</span>
+          </div>
+          <div class="canvas-wrapper-matrix">
+            <canvas id="p2Canvas_x"></canvas>
+          </div>
+        </div>
+
+        <div class="card matrix-card">
+          <div class="matrix-card-header">
+            <span class="badge-sub">2</span>
+            <span class="matrix-title">Subplot 2 — Frequency Domain: DTFT Magnitude |X(f)|</span>
+          </div>
+          <div class="canvas-wrapper-matrix">
+            <canvas id="p2Canvas_Xmag"></canvas>
+          </div>
+        </div>
+
+        <!-- Row 2: h[n] and |H(f)| -->
+        <div class="card matrix-card">
+          <div class="matrix-card-header">
+            <span class="badge-sub">3</span>
+            <span class="matrix-title">Subplot 3 — Time Domain: Impulse Response h[n]</span>
+          </div>
+          <div class="canvas-wrapper-matrix">
+            <canvas id="p2Canvas_h"></canvas>
+          </div>
+        </div>
+
+        <div class="card matrix-card">
+          <div class="matrix-card-header">
+            <span class="badge-sub">4</span>
+            <span class="matrix-title">Subplot 4 — Frequency Domain: System Response |H(f)|</span>
+          </div>
+          <div class="canvas-wrapper-matrix">
+            <canvas id="p2Canvas_Hmag"></canvas>
+          </div>
+        </div>
+
+        <!-- Row 3: y[n] and |Y(f)| Comparison -->
+        <div class="card matrix-card">
+          <div class="matrix-card-header">
+            <span class="badge-sub">5</span>
+            <span class="matrix-title">Subplot 5 — Time Domain: Convolution Output y[n] = x[n] * h[n]</span>
+          </div>
+          <div class="canvas-wrapper-matrix">
+            <canvas id="p2Canvas_y"></canvas>
+          </div>
+        </div>
+
+        <div class="card matrix-card">
+          <div class="matrix-card-header">
+            <span class="badge-sub">6</span>
+            <span class="matrix-title">Subplot 6 — DTFT Verification: |Y(f)| vs |X(f) · H(f)|</span>
+          </div>
+          <div class="canvas-wrapper-matrix">
+            <canvas id="p2Canvas_Ymag"></canvas>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- TAB 3: STEP-BY-STEP CONVOLUTION ANIMATOR -->
+    <!-- ================================================================= -->
+    <section id="tab-animator" class="tab-content">
+      
+      <div class="animator-container">
+        
+        <!-- Player Controls Bar -->
+        <div class="card animator-toolbar">
+          <div class="playback-controls">
+            <button class="btn btn-icon btn-secondary" id="btnAnimFirst" title="Go to start">
+              <i class="fa-solid fa-backward-step"></i>
+            </button>
+            <button class="btn btn-icon btn-secondary" id="btnAnimPrev" title="Previous sample (n - 1)">
+              <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <button class="btn btn-primary" id="btnAnimPlayToggle" style="min-width: 140px;">
+              <i class="fa-solid fa-play" id="animPlayIcon"></i> <span id="animPlayText">Play Animation</span>
+            </button>
+            <button class="btn btn-icon btn-secondary" id="btnAnimNext" title="Next sample (n + 1)">
+              <i class="fa-solid fa-chevron-right"></i>
+            </button>
+            <button class="btn btn-icon btn-secondary" id="btnAnimLast" title="Go to end">
+              <i class="fa-solid fa-forward-step"></i>
+            </button>
+          </div>
+
+          <div class="scrub-container">
+            <div class="scrub-label">
+              <span>Current Target Sample:</span>
+              <strong class="font-mono" id="animCurrentNVal">n = 0</strong>
+            </div>
+            <input type="range" id="animScrubRange" class="scrub-slider" min="-20" max="20" step="1" value="0">
+          </div>
+
+          <div class="speed-controls">
+            <label>Playback Speed:</label>
+            <div class="tab-pills-sm">
+              <button class="pill-sm" data-speed="2000">0.5×</button>
+              <button class="pill-sm active" data-speed="1000">1×</button>
+              <button class="pill-sm" data-speed="500">2×</button>
+              <button class="pill-sm" data-speed="200">5×</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4-Level Step Visualizer Grid -->
+        <div class="animator-grid">
+          
+          <!-- Visual 1: Stationary Signal x[k] -->
+          <div class="card anim-card">
+            <div class="anim-card-header">
+              <span class="anim-badge text-cyan">1. Stationary Input Sequence: x[k]</span>
+              <span class="anim-formula">Evaluated along dummy summation index k</span>
+            </div>
+            <div class="canvas-wrapper-anim">
+              <canvas id="animCanvas_xk"></canvas>
+            </div>
+          </div>
+
+          <!-- Visual 2: Flipped and Shifted h[n - k] -->
+          <div class="card anim-card">
+            <div class="anim-card-header">
+              <span class="anim-badge text-amber">2. Flipped & Shifted Impulse Response: h[n - k]</span>
+              <span class="anim-formula">Reversed around origin and shifted by target index n</span>
+            </div>
+            <div class="canvas-wrapper-anim">
+              <canvas id="animCanvas_hnmk"></canvas>
+            </div>
+          </div>
+
+          <!-- Visual 3: Pointwise Product Sequence x[k] * h[n - k] -->
+          <div class="card anim-card">
+            <div class="anim-card-header">
+              <span class="anim-badge text-purple">3. Pointwise Product Terms: p[k] = x[k] · h[n - k]</span>
+              <span class="anim-formula">Overlapping non-zero terms multiplied</span>
+            </div>
+            <div class="canvas-wrapper-anim">
+              <canvas id="animCanvas_prod"></canvas>
+            </div>
+          </div>
+
+          <!-- Visual 4: Accumulated Output y[n] -->
+          <div class="card anim-card">
+            <div class="anim-card-header">
+              <span class="anim-badge text-green">4. Resulting Convolution Sequence: y[n]</span>
+              <span class="anim-formula">Discrete sum accumulation</span>
+            </div>
+            <div class="canvas-wrapper-anim">
+              <canvas id="animCanvas_yacc"></canvas>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Calculation Breakdown Box -->
+        <div class="card arithmetic-box">
+          <div class="arith-title">
+            <i class="fa-solid fa-calculator"></i> Step Calculation Arithmetic:
+          </div>
+          <div class="arith-body" id="animArithBody">
+            $$y[0] = \sum_{k} x[k]\,h[0 - k] = 0.0$$
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- TAB 4: CUSTOM SIGNAL & FORMULA STUDIO -->
+    <!-- ================================================================= -->
+    <section id="tab-custom" class="tab-content">
+      <div class="grid-layout-two-col">
+        
+        <div class="card panel-controls">
+          <div class="card-header">
+            <div class="card-title">
+              <i class="fa-solid fa-code"></i> Custom Signal Builder
+            </div>
+          </div>
+
+          <!-- Expression vs Raw Array Mode -->
+          <div class="form-group">
+            <label class="form-label">Input Mode:</label>
+            <div class="tab-pills-sm" style="width: 100%; display: flex;">
+              <button class="pill-sm active" id="btnModeExpr" style="flex: 1;">Formula Expression</button>
+              <button class="pill-sm" id="btnModeArray" style="flex: 1;">Raw Number Array</button>
+            </div>
+          </div>
+
+          <!-- Expression Input Container -->
+          <div id="customExprContainer">
+            <div class="form-group">
+              <label class="form-label">Mathematical Formula in Variable n:</label>
+              <input type="text" id="customExprInput" class="text-input font-mono" value="2*sin(2*pi*0.1*n) + rect(n, 5, -2)">
+              <small class="form-hint">Available helper functions: <code>delta(n, shift)</code>, <code>step(n, shift)</code>, <code>rect(n, width, shift)</code>, <code>sgn(n)</code>, <code>ramp(n)</code>, <code>sin()</code>, <code>cos()</code>, <code>exp()</code>, <code>sinc()</code>.</small>
+            </div>
+
+            <div class="preset-chips">
+              <span class="chip" data-expr="rect(n, 6, -3) * cos(2*pi*0.15*n)">Modulated Pulse</span>
+              <span class="chip" data-expr="exp(-0.15*abs(n)) * sin(2*pi*0.2*n)">Damped Oscillation</span>
+              <span class="chip" data-expr="delta(n, -2) + 2*delta(n, 0) + delta(n, 2)">Triplet Impulse</span>
+              <span class="chip" data-expr="sinc(0.25*n) * rect(n, 15, -7)">Sinc Window</span>
+            </div>
+          </div>
+
+          <!-- Array Input Container -->
+          <div id="customArrayContainer" style="display: none;">
+            <div class="form-group">
+              <label class="form-label">Comma-Separated Discrete Samples:</label>
+              <input type="text" id="customArrayInput" class="text-input font-mono" value="1, 3, 5, 3, 1">
+            </div>
+            <div class="slider-row">
+              <div class="slider-header">
+                <label>Index of Sample Corresponding to n = 0:</label>
+                <span class="val-display" id="customOriginVal">2</span>
+              </div>
+              <input type="range" id="customOriginRange" min="0" max="10" step="1" value="2">
+            </div>
+          </div>
+
+          <div class="slider-row">
+            <div class="slider-header">
+              <label>Global Scaling Factor (A):</label>
+              <span class="val-display" id="customAVal">1.0</span>
+            </div>
+            <input type="range" id="customARange" min="-5" max="5" step="0.2" value="1.0">
+          </div>
+
+          <button class="btn btn-primary" id="btnEvalCustom" style="width: 100%; margin-top: 15px;">
+            <i class="fa-solid fa-play"></i> Evaluate & Plot Signal
+          </button>
+
+          <button class="btn btn-outline" id="btnUseCustomAsX" style="width: 100%; margin-top: 10px;">
+            <i class="fa-solid fa-arrow-right"></i> Set as Input Signal x[n] in Convolution Studio
+          </button>
+        </div>
+
+        <div class="plots-column">
+          <div class="card plot-card">
+            <div class="card-header">
+              <div class="card-title">Custom Discrete-Time Waveform: x[n]</div>
+            </div>
+            <div class="canvas-wrapper">
+              <canvas id="customTimeCanvas"></canvas>
+            </div>
+          </div>
+
+          <div class="card plot-card">
+            <div class="card-header">
+              <div class="card-title">Direct DTFT Magnitude Spectrum: |X(f)|</div>
+            </div>
+            <div class="canvas-wrapper">
+              <canvas id="customFreqCanvas"></canvas>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- TAB 5: HOMEWORK PRESETS & THEORY GUIDE -->
+    <!-- ================================================================= -->
+    <section id="tab-presets" class="tab-content">
+      
+      <div class="presets-gallery-grid">
+        
+        <!-- Card 1: Section 4 -->
+        <div class="card theory-card">
+          <div class="theory-header">
+            <div class="theory-badge">Homework Case 1</div>
+            <h3>Section 4 Assignment Example</h3>
+          </div>
+          <div class="theory-body">
+            <p>Convolution of a delayed unit step with a shifted unit impulse:</p>
+            <div class="math-box">$$x[n] = 2u[n - 2], \quad h[n] = \delta[n - 1]$$</div>
+            <p><strong>Theoretical Result:</strong> By the sifting property of the discrete-time impulse, convolving any sequence with a shifted impulse $\delta[n - n_0]$ produces an exact time shift of $n_0$ samples:</p>
+            <div class="math-box">$$y[n] = x[n - 1] = 2u[n - 3]$$</div>
+            <p><strong>DTFT Convolution Property:</strong></p>
+            <div class="math-box">$$\mathcal{F}\{y[n]\} = X(f) \cdot e^{-j 2\pi f (1)} \equiv X(f) \cdot H(f)$$</div>
+          </div>
+          <button class="btn btn-sm btn-outline load-preset-btn" data-preset="sec4">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> Load in Studio
+          </button>
+        </div>
+
+        <!-- Card 2: Rectangular Pulses -->
+        <div class="card theory-card">
+          <div class="theory-header">
+            <div class="theory-badge">Homework Case 2</div>
+            <h3>Rectangular Boxcar Pulses</h3>
+          </div>
+          <div class="theory-body">
+            <p>Convolution of two rectangular pulses of lengths $N_1 = 5$ and $N_2 = 4$:</p>
+            <div class="math-box">$$x[n] = 3\,\text{rect}_5[n - 2], \quad h[n] = 2\,\text{rect}_4[n + 1]$$</div>
+            <p><strong>Theoretical Result:</strong> The convolution of two boxcar pulses produces a trapezoidal sequence of duration $(N_1 + N_2 - 1) = 8$ samples on interval $n \in [1, 8]$.</p>
+            <p><strong>DTFT Convolution Property:</strong> The spectral product of two Dirichlet sinc kernels matches the DTFT of the trapezoid to machine precision ($< 10^{-13}$).</p>
+          </div>
+          <button class="btn btn-sm btn-outline load-preset-btn" data-preset="rect_pulses">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> Load in Studio
+          </button>
+        </div>
+
+        <!-- Card 3: Cosine + Moving Average -->
+        <div class="card theory-card">
+          <div class="theory-header">
+            <div class="theory-badge">Homework Case 3</div>
+            <h3>Cosine Signal Filtered by Moving Average</h3>
+          </div>
+          <div class="theory-body">
+            <p>Filtering a discrete cosine by a 3-point moving average low-pass filter:</p>
+            <div class="math-box">$$x[n] = 2\cos(2\pi \cdot 0.1\,n), \quad h[n] = \frac{1}{3}\text{rect}_3[n]$$</div>
+            <p><strong>Theoretical Result:</strong> The 3-point moving average acts as a low-pass filter, attenuating the cosine amplitude by $|H(0.1)| \approx 0.709$ with linear phase delay.</p>
+          </div>
+          <button class="btn btn-sm btn-outline load-preset-btn" data-preset="cosine_ma">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> Load in Studio
+          </button>
+        </div>
+
+        <!-- Card 4: Audio Echo Filter -->
+        <div class="card theory-card">
+          <div class="theory-header">
+            <div class="theory-badge">DSP Application</div>
+            <h3>Discrete Comb / Acoustic Echo Filter</h3>
+          </div>
+          <div class="theory-body">
+            <p>Simulating acoustic reflection in discrete time:</p>
+            <div class="math-box">$$h[n] = \delta[n] + 0.6\,\delta[n - 4]$$</div>
+            <p><strong>Theoretical Result:</strong> Produces a periodic comb filter magnitude response with constructive and destructive interference notches.</p>
+          </div>
+          <button class="btn btn-sm btn-outline load-preset-btn" data-preset="delay_echo">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> Load in Studio
+          </button>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Notification Toast -->
+  <div id="toastNotification" class="toast">
+    <i class="fa-solid fa-circle-check"></i> <span id="toastMessage">Done!</span>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/static/js/audio.js"></script>
+  <script src="/static/js/convolution_player.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
